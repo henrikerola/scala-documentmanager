@@ -1,11 +1,11 @@
 package com.github.henrikerola.scaladocumentmanager
 
 import java.io.File
-
 import com.vaadin.Application
 import com.vaadin.data.util.FilesystemContainer
 import vaadin.scala._
 import com.vaadin.data.util.TextFileProperty
+import org.vaadin.teemu.ratingstars.RatingStars
 
 object DocumentManagerApplication {
   val filesDir = "/Users/henri/Desktop/docs"
@@ -23,6 +23,7 @@ class DocumentManagerApplication extends Application {
     mainWindow addComponent (new VerticalLayout(width = 100 percent, height = 100 percent) {
       add(viewer, ratio = 1)
       add(new Button("Edit", _ => editButtonClicked))
+      add(new RatingStars())
     })
 
     selector.addListener(_ => {
