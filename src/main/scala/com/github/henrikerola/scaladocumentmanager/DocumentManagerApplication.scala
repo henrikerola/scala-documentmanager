@@ -8,24 +8,25 @@ object DocumentManagerApplication {
 }
 
 class DocumentManagerApplication extends Application("Scala Document Manager") {
-  
+
   val selector = new Table {
     sizeFull()
     immediate = true
     selectionMode = SelectionMode.Single
     container = new FilesystemContainer(new File(DocumentManagerApplication.FilesDir))
     valueChangeListeners += {
-      viewer.property = new TextFileProperty(value.getOrElse(null).asInstanceOf[File])
+      viewer.property = new TextFileProperty(value map { _.asInstanceOf[File] })
     }
   }
-  
-  val viewer = new HtmlLabel {
+
+  val viewer = new Label {
+    contentMode = Label.ContentMode.Xhtml
     sizeFull()
   }
 
   override def main = new VerticalSplitPanel {
-    addComponent(selector)
-    addComponent(new VerticalLayout {
+    add(selector)
+    add(new VerticalLayout {
       sizeFull()
       add(viewer, ratio = 1)
       add(Button("Edit", editButtonClicked()))
@@ -34,8 +35,7 @@ class DocumentManagerApplication extends Application("Scala Document Manager") {
 
   def editButtonClicked() {
     mainWindow.childWindows += new Window { editWindow =>
-      width = 500 px;
-      height = 400 px
+      size(500 px, 400 px)
 
       caption = "Edit document"
       modal = true
@@ -47,7 +47,7 @@ class DocumentManagerApplication extends Application("Scala Document Manager") {
           writeThrough = false
           property = viewer.property
         }, ratio = 1)
-        addComponent(Button("Save", {
+        add(Button("Save", { e =>
           mainWindow.childWindows -= editWindow
           editor.commit()
         }))
